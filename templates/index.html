@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Football Matches</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <h1>FootData</h1>
+        </nav>
+    </header>
+
+    <div class="container mt-5">
+        <!--<h1>Partidas</h1>!-->
+        <div class="row">
+            {% for match in matches %}
+            <div class="col-md-4">
+                <div class="match-card" data-toggle="modal" data-target="#matchDetails"
+                    data-home="{{ match[0] }}"
+                    data-away="{{ match[1] }}"
+                    data-score="{{ match[2] }}"
+                    data-stadium="{{ match[3] }}"
+                    data-date="{{ match[4] }}"
+                    data-referee="{{ match[5] }}"
+                    data-yellow="{{ match[6] }}"
+                    data-red="{{ match[7] }}">
+                    <h5>{{ match[0] }} vs {{ match[1] }}</h5>
+                    <p><strong>Score:</strong> {{ match[2] }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="matchDetails" tabindex="-1" role="dialog" aria-labelledby="matchDetailsLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="matchDetailsLabel">Match Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Time da casa:</strong> <span id="homeTeam"></span></p>
+                    <p><strong>Time de fora:</strong> <span id="awayTeam"></span></p>
+                    <p><strong>Placar:</strong> <span id="score"></span></p>
+                    <p><strong>Estádio:</strong> <span id="stadium"></span></p>
+                    <p><strong>Data:</strong> <span id="date"></span></p>
+                    <p><strong>Juiz:</strong> <span id="referee"></span></p>
+                    <p><strong>Cartões amarelos:</strong> <span id="yellowCards"></span></p>
+                    <p><strong>Cartões vermelhos:</strong> <span id="redCards"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#matchDetails').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); //Botão que aciona o modal
+
+                //Extraindo os dados do atributo
+                var home = button.data('home');
+                var away = button.data('away');
+                var score = button.data('score');
+                var stadium = button.data('stadium');
+                var date = button.data('date');
+                var referee = button.data('referee');
+                var yellow = button.data('yellow');
+                var red = button.data('red');
+
+                //Atualizando o conteúdo do modal
+                var modal = $(this);
+                modal.find('#homeTeam').text(home);
+                modal.find('#awayTeam').text(away);
+                modal.find('#score').text(score);
+                modal.find('#stadium').text(stadium);
+                modal.find('#date').text(date);
+                modal.find('#referee').text(referee);
+                modal.find('#yellowCards').text(yellow);
+                modal.find('#redCards').text(red);
+            });
+        });
+    </script>
+</body>
+</html>
