@@ -1,7 +1,6 @@
 import requests
 import sqlite3
 
-# Substitua pela sua chave de API
 API_KEY = '9e63fddbcd4560f1d099d51b934606fd'
 API_URL = 'https://v3.football.api-sports.io/'
 
@@ -14,12 +13,12 @@ def get_match_data(league_id, season):
     response = requests.get(url, headers=headers)
     match_data = response.json()
     
-    print("Response JSON:", match_data)  #Adicione isso para verificar a estrutura
+    print("Response JSON:", match_data)
 
     if 'response' in match_data:  #Verifica se a chave 'response' existe
         detailed_matches = []
         for match in match_data['response']:
-            #Extrair os dados conforme a estrutura correta
+            #Extrai os dados conforme a estrutura correta
             home_team = match['teams']['home']['name']
             away_team = match['teams']['away']['name']
             score = f"{match['goals']['home']}-{match['goals']['away']}"
