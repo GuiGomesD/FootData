@@ -11,10 +11,11 @@
 <body>
 
     <header>
-        <nav>
+        <nav class="container">
             <h1>FootData</h1>
         </nav>
     </header>
+    
 
     <div class="container mt-5">
         <!--<h1>Partidas</h1>!-->
@@ -31,7 +32,7 @@
                     data-yellow="{{ match[6] }}"
                     data-red="{{ match[7] }}">
                     <h5>{{ match[0] }} vs {{ match[1] }}</h5>
-                    <p><strong>Score:</strong> {{ match[2] }}</p>
+                    <p><strong>Placar:</strong> {{ match[2] }}</p>
                 </div>
             </div>
             {% endfor %}
