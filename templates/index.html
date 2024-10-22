@@ -18,26 +18,33 @@
     
 
     <div class="container mt-5">
-        <!--<h1>Partidas</h1>!-->
-        <div class="row">
+        <input type="text" id="searchBar" placeholder="Busque por juiz, time, estádio..." class="form-control mb-4">
+    
+        <!-- Botões de Filtro -->
+        <div class="btn-group mb-4" role="group" aria-label="Filtro de Resultados">
+            <button id="filterHomeWin" class="btn btn-primary">Casa Venceu</button>
+            <button id="filterAwayWin" class="btn btn-primary">Fora Venceu</button>
+            <button id="filterDraw" class="btn btn-primary">Empates</button>
+            <button id="clearFilter" class="btn btn-secondary">Limpar Filtros</button>
+        </div>
+    
+        <div class="matches-container">
             {% for match in matches %}
-            <div class="col-md-4">
-                <div class="match-card" data-toggle="modal" data-target="#matchDetails"
-                    data-home="{{ match[0] }}"
-                    data-away="{{ match[1] }}"
-                    data-score="{{ match[2] }}"
-                    data-stadium="{{ match[3] }}"
-                    data-date="{{ match[4] }}"
-                    data-referee="{{ match[5] }}"
-                    data-yellow="{{ match[6] }}"
-                    data-red="{{ match[7] }}">
-                    <h5>{{ match[0] }} vs {{ match[1] }}</h5>
-                    <p><strong>Placar:</strong> {{ match[2] }}</p>
-                </div>
+            <div class="match-card" data-toggle="modal" data-target="#matchDetails"
+                data-home="{{ match[0] }}"
+                data-away="{{ match[1] }}"
+                data-score="{{ match[2] }}"
+                data-stadium="{{ match[3] }}"
+                data-date="{{ match[4] }}"
+                data-referee="{{ match[5] }}"
+                data-yellow="{{ match[6] }}"
+                data-red="{{ match[7] }}">
+                <h5>{{ match[0] }} vs {{ match[1] }}</h5>
+                <p><strong>Placar:</strong> {{ match[2] }}</p>
             </div>
             {% endfor %}
         </div>
-    </div>
+    </div>    
 
     <!-- Modal -->
     <div class="modal fade" id="matchDetails" tabindex="-1" role="dialog" aria-labelledby="matchDetailsLabel" aria-hidden="true">
@@ -97,6 +104,75 @@
                 modal.find('#redCards').text(red);
             });
         });
+
+        document.getElementById('searchBar').addEventListener('input', function() {
+        var filter = this.value.toLowerCase();
+        var matchCards = document.querySelectorAll('.match-card');
+
+        matchCards.forEach(function(card) {
+            //Pega os dados a serem filtrados
+            var homeTeam = card.getAttribute('data-home').toLowerCase();
+            var awayTeam = card.getAttribute('data-away').toLowerCase();
+            var stadium = card.getAttribute('data-stadium').toLowerCase();
+            var referee = card.getAttribute('data-referee').toLowerCase();
+
+            //Verifica se algum dos dados contém o filtro
+            if (homeTeam.includes(filter) || awayTeam.includes(filter) || stadium.includes(filter) || referee.includes(filter)) {
+                card.style.display = ""; // Mostra o card
+            } else {
+                card.style.display = "none"; //Esconde o card
+            }
+        });
+    });
+
+$(document).ready(function() {
+    //Função para exibir todas as partidas
+    function showAllMatches() {
+        $('.match-card').each(function() {
+            $(this).show(); //Mostra todas as partidas
+        });
+    }
+
+    //Função para aplicar o filtro baseado no placar
+    function filterMatches(filterType) {
+        $('.match-card').each(function() {
+            var score = $(this).data('score'); //Pega o placar (X-Y)
+            var [homeScore, awayScore] = score.split('-').map(Number); //Divide e converte em números
+
+            if (filterType === 'homeWin' && homeScore > awayScore) {
+                $(this).show(); //Time da casa venceu
+            } else if (filterType === 'awayWin' && homeScore < awayScore) {
+                $(this).show(); //Time visitante venceu
+            } else if (filterType === 'draw' && homeScore === awayScore) {
+                $(this).show(); //Empate
+            } else {
+                $(this).hide(); //Esconde as partidas que não correspondem ao filtro
+            }
+        });
+    }
+
+    //Evento para o botão de "Casa Venceu"
+    $('#filterHomeWin').click(function() {
+        filterMatches('homeWin');
+    });
+
+    //Evento para o botão de "Fora Venceu"
+    $('#filterAwayWin').click(function() {
+        filterMatches('awayWin');
+    });
+
+    //Evento para o botão de "Empate"
+    $('#filterDraw').click(function() {
+        filterMatches('draw');
+    });
+
+    //Evento para o botão de "Limpar Filtros"
+    $('#clearFilter').click(function() {
+        showAllMatches(); //Mostra todas as partidas novamente
+    });
+});
+
+
     </script>
 </body>
 </html>
