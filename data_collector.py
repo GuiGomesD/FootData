@@ -15,10 +15,9 @@ def get_match_data(league_id, season):
     
     print("Response JSON:", match_data)
 
-    if 'response' in match_data:  #Verifica se a chave 'response' existe
+    if 'response' in match_data:
         detailed_matches = []
         for match in match_data['response']:
-            #Extrai os dados conforme a estrutura correta
             home_team = match['teams']['home']['name']
             away_team = match['teams']['away']['name']
             score = f"{match['goals']['home']}-{match['goals']['away']}"
@@ -42,13 +41,12 @@ def get_match_data(league_id, season):
         return detailed_matches
     else:
         print("Nenhum dado de partidas encontrado.")
-        return []  #Retorna uma lista vazia se não houver dados
+        return []
 
 def save_to_database(matches):
     conn = sqlite3.connect('football_data.db')
     c = conn.cursor()
 
-    #Criação da tabela de partidas
     c.execute('''CREATE TABLE IF NOT EXISTS matches (
         id INTEGER PRIMARY KEY,
         home_team TEXT,
@@ -61,7 +59,6 @@ def save_to_database(matches):
         red_cards INTEGER
     )''')
 
-    #Limpar dados antigos para evitar duplicações em execuções futuras
     c.execute("DELETE FROM matches")
 
     for match in matches:
@@ -88,17 +85,17 @@ def check_data_in_database():
     rows = c.fetchall()
     
     for row in rows:
-        print(row)  #Isso irá imprimir todas as colunas da tabela
+        print(row)
 
     conn.close()
 
 if __name__ == '__main__':
-    league_id = 39  #Premier League, por exemplo
-    season = 2022  #Ano da temporada
+    league_id = 39
+    season = 2022
     match_data = get_match_data(league_id, season)
     
-    if match_data:  #Verifica se há dados de partidas
+    if match_data:
         save_to_database(match_data)
-        check_data_in_database()  #Chama a função para verificar os dados
+        check_data_in_database()
     else:
         print("Nenhum dado de partidas encontrado.")
